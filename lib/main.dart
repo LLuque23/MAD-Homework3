@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:homework_3/screens/home_screen.dart';
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Midterm App',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.teal,
       ),
       home: LandingScreen(),
       routes: <String, WidgetBuilder>{
