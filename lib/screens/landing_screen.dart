@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homework_3/services/firebase_service.dart';
 
@@ -12,13 +13,19 @@ class LandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
+      body: StreamBuilder<User?>(
         stream: _firebaseService.userChangesStream(),
         builder: (BuildContext context, snapshot) {
-          if (snapshot.hasData) {
-            return const HomeScreen();
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.hasData) {
+              return const HomeScreen();
+            }
+            return const LoginScreen();
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
-          return const LoginScreen();
         },
       ),
     );
