@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:homework_3/components/snackbar.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -94,20 +95,8 @@ class FirebaseService {
                 child: const Text('YES'),
                 onPressed: () async {
                   try {
-                    await FirebaseService().signOut();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        backgroundColor: Colors.blueGrey,
-                        content: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            'User successfully logged out.',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        duration: Duration(seconds: 5),
-                      ),
-                    );
+                    await _auth.signOut();
+                    snackbar(context, 'User successfully logged out.', 5);
                     Navigator.of(context).pop();
                   } catch (error) {
                     throw ErrorDescription(error.toString());
