@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:homework_3/components/snackbar.dart';
 import 'package:homework_3/constants/constants.dart';
 import 'package:homework_3/services/firebase_service.dart';
@@ -62,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         decoration: kTextFieldDecoration.copyWith(
                           hintText: 'Email',
                           prefixIcon: const Icon(
-                            Icons.email,
+                            FontAwesomeIcons.mailBulk,
                             color: kAppColor,
                           ),
                         ),
@@ -80,11 +81,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(
-                            hintText: 'Password',
-                            prefixIcon: const Icon(
-                              Icons.lock,
-                              color: kAppColor,
-                            )),
+                          hintText: 'Password',
+                          prefixIcon: const Icon(
+                            FontAwesomeIcons.userLock,
+                            color: kAppColor,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 30),
                       SizedBox(
@@ -130,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: const Text(
                               'Register Now',
                               style: TextStyle(
-                                color: Colors.green,
+                                color: kAppColor,
                               ),
                             ),
                             onTap: () {

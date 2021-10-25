@@ -4,6 +4,7 @@ import 'package:homework_3/constants/constants.dart';
 import 'package:homework_3/screens/home_screen.dart';
 import 'package:homework_3/screens/landing_screen.dart';
 import 'package:homework_3/screens/login_screen.dart';
+import 'package:homework_3/screens/register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       home: LandingScreen(),
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => const LoginScreen(),
-        // '/register': (BuildContext context) => const RegisterScreen(),
+        '/register': (BuildContext context) => const RegisterScreen(),
         '/home': (BuildContext context) => const HomeScreen(),
       },
     );

@@ -27,7 +27,7 @@ class FirebaseService {
         throw ('This email is already in use');
       }
     } catch (e) {
-      return Future.error(e);
+      throw Future.error(e);
     }
   }
 
@@ -72,39 +72,55 @@ class FirebaseService {
 
   Future<void> userLogout(BuildContext context) {
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text('Are you sure you want to logout?'),
-            actions: <Widget>[
-              TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: Colors.red,
-                ),
-                child: const Text('CANCEL'),
-                onPressed: () {
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+                backgroundColor: Colors.red,
+              ),
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                primary: Colors.white,
+                backgroundColor: Colors.green,
+              ),
+              child: const Text('YES'),
+              onPressed: () async {
+                try {
+                  await _auth.signOut();
+                  snackbar(context, 'User successfully logged out.', 5);
                   Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: Colors.green,
-                ),
-                child: const Text('YES'),
-                onPressed: () async {
-                  try {
-                    await _auth.signOut();
-                    snackbar(context, 'User successfully logged out.', 5);
-                    Navigator.of(context).pop();
-                  } catch (error) {
-                    throw ErrorDescription(error.toString());
-                  }
-                },
-              ),
-            ],
-          );
-        });
+                } catch (error) {
+                  throw ErrorDescription(error.toString());
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> addUserDocument(
+      context, String fName, String lName, String age, String bio) async {
+    return _userCollection
+        .doc(_auth.currentUser?.uid)
+        .set({
+          'fName': fName,
+          'lName': lName,
+          'age': age,
+          'bio': bio,
+          'creation-date': DateTime.now(),
+        })
+        .then((value) => snackbar(context, "User Added", 5))
+        .catchError((error) => throw (error));
   }
 }
