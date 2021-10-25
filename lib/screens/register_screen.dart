@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:homework_3/components/snackbar.dart';
@@ -174,10 +175,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
                               try {
-                                await _firebaseService.createEmailAndPassword(
-                                    email, password);
-                                await _firebaseService.addUserDocument(
-                                    context, fName, lName, age, bio);
+                                UserCredential? user = await _firebaseService
+                                    .createEmailAndPassword(email, password);
+                                if (user != null) {
+                                  await _firebaseService.addUserDocument(
+                                      context, fName, lName, age, bio);
+                                }
+
                                 Navigator.of(context).pop();
                               } catch (e) {
                                 snackbar(context, e.toString(), 3);
