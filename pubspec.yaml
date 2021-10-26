@@ -39,6 +39,7 @@ dependencies:
   cloud_firestore: ^2.5.3
   font_awesome_flutter: ^9.1.0
   email_validator: ^2.0.1
+  provider: ^6.0.1
 
 dev_dependencies:
   flutter_test:

@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homework_3/components/snackbar.dart';
+import 'package:homework_3/models/user.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
   final String uid;
@@ -48,6 +50,10 @@ class FirebaseService {
 
   Future<UserCredential> signInAnon() async {
     return await _auth.signInAnonymously();
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserDocument(String uid) {
+    return _firestore.collection('users').doc(uid).get();
   }
 
   Future<void> signOut() async {
@@ -111,16 +117,31 @@ class FirebaseService {
 
   Future<void> addUserDocument(
       context, String fName, String lName, String age, String bio) async {
-    return _userCollection
+    await _userCollection
         .doc(_auth.currentUser?.uid)
         .set({
           'fName': fName,
           'lName': lName,
           'age': age,
           'bio': bio,
-          'creation-date': DateTime.now(),
+          'creationDate': DateTime.now(),
+          'id': _auth.currentUser?.uid
         })
         .then((value) => snackbar(context, "User Added", 5))
         .catchError((error) => throw (error));
+  }
+
+  Stream<List<Users>> streamUsers() {
+    Stream<List<Users>> list = _firestore
+        .collection('users')
+        .snapshots()
+        .map((QuerySnapshot<Map<String, dynamic>> list) => list.docs
+            .map((DocumentSnapshot<Map<String, dynamic>> snap) =>
+                Users.fromMap(snap.data() as Map<String, dynamic>))
+            .toList())
+        .handleError((dynamic e) {
+      print(e);
+    });
+    return list;
   }
 }
