@@ -115,8 +115,8 @@ class FirebaseService {
     );
   }
 
-  Future<void> addUserDocument(
-      context, String fName, String lName, String age, String bio) async {
+  Future<void> addUserDocument(context, String fName, String lName, String age,
+      String bio, String fullName) async {
     await _userCollection
         .doc(_auth.currentUser?.uid)
         .set({
@@ -125,7 +125,8 @@ class FirebaseService {
           'age': age,
           'bio': bio,
           'creationDate': DateTime.now(),
-          'id': _auth.currentUser?.uid
+          'id': _auth.currentUser?.uid,
+          'fullName': fullName
         })
         .then((value) => snackbar(context, "User Added", 5))
         .catchError((error) => throw (error));

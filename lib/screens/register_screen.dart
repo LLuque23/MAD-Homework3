@@ -174,14 +174,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (_formkey.currentState!.validate()) {
+                              setState(() {
+                                isloading = true;
+                              });
                               try {
                                 UserCredential? user = await _firebaseService
                                     .createEmailAndPassword(email, password);
                                 if (user != null) {
                                   await _firebaseService.addUserDocument(
-                                      context, fName, lName, age, bio);
+                                      context,
+                                      fName,
+                                      lName,
+                                      age,
+                                      bio,
+                                      fName + " " + lName);
                                 }
-
                                 Navigator.of(context).pop();
                               } catch (e) {
                                 snackbar(context, e.toString(), 3);

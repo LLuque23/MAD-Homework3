@@ -18,7 +18,7 @@ class UserRow extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         child: Center(
           child: Text(
-            contact.fName + contact.lName,
+            contact.fullName,
             style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
         ),

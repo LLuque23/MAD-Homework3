@@ -7,7 +7,8 @@ class Users {
       required this.age,
       required this.creationDate,
       required this.bio,
-      required this.id});
+      required this.id,
+      required this.fullName});
 
   final String fName;
   final String lName;
@@ -15,6 +16,7 @@ class Users {
   final String bio;
   final Timestamp creationDate;
   final String id;
+  final String fullName;
 
   factory Users.fromMap(Map<String, dynamic> data) {
     return Users(
@@ -23,6 +25,7 @@ class Users {
         age: data['age'],
         bio: data['bio'],
         creationDate: data['creationDate'],
-        id: data['id']);
+        id: data['id'],
+        fullName: data['fullName']);
   }
 }
