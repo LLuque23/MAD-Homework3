@@ -138,6 +138,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (value!.isEmpty) {
                             return "Please enter Age";
                           }
+                          if (num.tryParse(value) == null) {
+                            return "Please enter valid Age";
+                          }
                         },
                         textAlign: TextAlign.center,
                         decoration: kTextFieldDecoration.copyWith(

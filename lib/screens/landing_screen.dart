@@ -18,7 +18,7 @@ class LandingScreen extends StatelessWidget {
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             if (snapshot.hasData) {
-              return HomeScreen();
+              return const HomeScreen();
             }
             return const LoginScreen();
           } else {

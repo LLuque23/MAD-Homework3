@@ -15,34 +15,13 @@ class NewMessageProvider extends StatelessWidget {
     return StreamProvider<List<Users>>.value(
       value: FirebaseService().streamUsers(),
       initialData: const [],
-      child: NewMessageScreen(),
+      child: const NewMessageScreen(),
     );
   }
 }
 
-// class NewMessageScreen extends StatelessWidget {
-//   const NewMessageScreen({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final User? user = FirebaseService().currentUser();
-//     final List<Users> userDirectory = Provider.of<List<Users>>(context);
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Select Contact'),
-//       ),
-//       body: userDirectory.isNotEmpty
-//           ? ListView(
-//               shrinkWrap: true,
-//               children: getListViewItems(_userDirectory, _user),
-//             )
-//           : const Text('No Users Registered'),
-//     );
-//   }
-// }
-
 class NewMessageScreen extends StatefulWidget {
-  NewMessageScreen({Key? key}) : super(key: key);
+  const NewMessageScreen({Key? key}) : super(key: key);
 
   @override
   _NewMessageScreenState createState() => _NewMessageScreenState();
@@ -64,11 +43,6 @@ class _NewMessageScreenState extends State<NewMessageScreen> {
     setState(() {
       _foundUsers = results;
     });
-  }
-
-  @override
-  initState() {
-    super.initState();
   }
 
   @override
@@ -123,7 +97,6 @@ List<Widget> getListViewItems(List<Users> userDirectory, User? user) {
   for (Users contact in userDirectory) {
     if (contact.id != user!.uid) {
       list.add(UserRow(uid: user.uid, contact: contact));
-      list.add(const Divider(thickness: 1.0));
     }
   }
   return list;
