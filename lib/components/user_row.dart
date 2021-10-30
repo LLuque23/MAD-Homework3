@@ -13,14 +13,13 @@ class UserRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => createConversation(context),
-      child: Container(
-        margin: const EdgeInsets.all(10.0),
-        padding: const EdgeInsets.all(10.0),
-        child: Center(
-          child: Text(
-            contact.fName + contact.lName,
+      child: Card(
+        child: ListTile(
+          title: Text(
+            contact.fullName,
             style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
           ),
+          subtitle: Text(contact.age + " years old"),
         ),
       ),
     );

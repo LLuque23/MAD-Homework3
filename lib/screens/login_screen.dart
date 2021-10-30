@@ -100,8 +100,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               try {
                                 await _firebaseService.loginEmailAndPassword(
                                     email, password);
-                                snackbar(
-                                    context, 'User Successfully signed in', 3);
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == 'user-not-found') {
                                   snackbar(context,
@@ -115,9 +113,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               } catch (e) {
                                 snackbar(context, e.toString(), 3);
                               }
-                              setState(() {
-                                isloading = false;
-                              });
                             }
                           },
                           child: const Text("Sign In"),
