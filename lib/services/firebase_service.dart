@@ -145,4 +145,64 @@ class FirebaseService {
     });
     return list;
   }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getConvoMessages(String convoID) {
+    return _firestore
+        .collection('messages')
+        .doc(convoID)
+        .collection(convoID)
+        .orderBy('timestamp', descending: true)
+        .limit(20)
+        .snapshots();
+  }
+
+  void updateMessageRead(DocumentSnapshot doc, String convoID) {
+    final DocumentReference documentReference = _firestore
+        .collection('messages')
+        .doc(convoID)
+        .collection(convoID)
+        .doc(doc.id);
+
+    documentReference.update({'read': true});
+  }
+
+  sendMessage(
+    String convoID,
+    String id,
+    String pid,
+    String content,
+    String timestamp,
+  ) {
+    final DocumentReference convoDoc =
+        _firestore.collection('messages').doc(convoID);
+    convoDoc.set({
+      'lastMessage': {
+        'idFrom': id,
+        'idTo': pid,
+        'timestamp': timestamp,
+        'content': content,
+        'read': false
+      },
+      'users': [id, pid]
+    }).then((value) {
+      final DocumentReference messageDoc = _firestore
+          .collection('messages')
+          .doc(convoID)
+          .collection(convoID)
+          .doc(timestamp);
+
+      _firestore.runTransaction((transaction) async {
+        await transaction.set(
+          messageDoc,
+          {
+            'idFrom': id,
+            'idTo': pid,
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            'content': content,
+            'read': false
+          },
+        );
+      });
+    });
+  }
 }
