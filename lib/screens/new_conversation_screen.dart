@@ -1,7 +1,6 @@
 import 'package:bubble/bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:homework_3/models/user.dart';
 import 'package:homework_3/services/firebase_service.dart';
 
@@ -14,7 +13,7 @@ class NewConversationScreen extends StatelessWidget {
       : super(key: key);
 
   final String uid;
-  final Users contact;
+  final Users? contact;
   final String convoID;
 
   @override
@@ -22,7 +21,7 @@ class NewConversationScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text(contact.fullName),
+        title: Text(contact!.fullName),
       ),
       body: ChatScreen(uid: uid, convoID: convoID, contact: contact),
     );
@@ -38,7 +37,7 @@ class ChatScreen extends StatefulWidget {
       : super(key: key);
 
   final String uid;
-  final Users contact;
+  final Users? contact;
   final String convoID;
 
   @override
@@ -47,7 +46,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   late String uid;
-  late Users contact;
+  late Users? contact;
   late String convoID;
 
   late List<DocumentSnapshot> listMessage;
@@ -65,22 +64,20 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              buildMessages(),
-              buildInput(),
-            ],
-          )
-        ],
-      ),
+    return Stack(
+      children: [
+        Column(
+          children: [
+            buildMessages(),
+            buildInput(),
+          ],
+        )
+      ],
     );
   }
 
   Widget buildInput() {
-    return Container(
+    return SizedBox(
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Row(
@@ -168,7 +165,7 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Container(
                   child: Bubble(
-                    color: Colors.grey[100],
+                    color: Colors.black,
                     elevation: 0,
                     padding: const BubbleEdges.all(10),
                     nip: BubbleNip.leftTop,
@@ -196,7 +193,7 @@ class _ChatScreenState extends State<ChatScreen> {
       FirebaseService().sendMessage(
         convoID,
         uid,
-        contact.id,
+        contact!.id,
         content,
         DateTime.now().millisecondsSinceEpoch.toString(),
       );

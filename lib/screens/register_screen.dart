@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                         validator: (value) {
                           if (!EmailValidator.validate(value!)) {
-                            return "Please enter Password";
+                            return "Please enter valid email";
                           }
                         },
                         textAlign: TextAlign.center,

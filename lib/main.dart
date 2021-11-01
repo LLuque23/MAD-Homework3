@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => const LoginScreen(),
         '/register': (BuildContext context) => const RegisterScreen(),
-        '/home': (BuildContext context) => const HomeScreen(),
+        '/homeBuilder': (BuildContext context) => HomeBuilder(),
         '/messageProvider': (BuildContext context) =>
             const NewMessageProvider(),
       },

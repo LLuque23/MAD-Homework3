@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:homework_3/components/snackbar.dart';
+import 'package:homework_3/models/convo.dart';
 import 'package:homework_3/models/user.dart';
+import 'package:async/async.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -166,7 +168,7 @@ class FirebaseService {
     documentReference.update({'read': true});
   }
 
-  sendMessage(
+  void sendMessage(
     String convoID,
     String id,
     String pid,
@@ -204,5 +206,46 @@ class FirebaseService {
         );
       });
     });
+  }
+
+  void updateLastMessageRead(String uid, String pid, String convoId,
+      Map<dynamic, dynamic> lastMessage) {
+    if (lastMessage['idFrom'] != uid) {
+      final DocumentReference documentReference =
+          _firestore.collection('messages').doc(convoId);
+      documentReference.set(
+        {
+          'lastMessage': {
+            'idFrom': lastMessage['idFrom'],
+            'idTo': lastMessage['idTo'],
+            'timestamp': lastMessage['timestamp'],
+            'content': lastMessage['content'],
+            'read': true
+          },
+          'users': [uid, pid]
+        },
+      );
+    }
+  }
+
+  Stream<List<Convo>> streamConversations(String uid) {
+    return _firestore
+        .collection('messages')
+        .orderBy('lastMessage.timestamp', descending: true)
+        .where('users', arrayContains: uid)
+        .snapshots()
+        .map((QuerySnapshot list) => list.docs
+            .map((DocumentSnapshot doc) => Convo.fromFireStore(doc))
+            .toList());
+  }
+
+  Stream<List<Users>> getUsersByList(List<String> userIds) {
+    final List<Stream<Users>> streams = [];
+    for (String id in userIds) {
+      streams.add(_firestore.collection('users').doc(id).snapshots().map(
+          (DocumentSnapshot snap) =>
+              Users.fromMap(snap.data() as Map<String, dynamic>)));
+    }
+    return StreamZip<Users>(streams).asBroadcastStream();
   }
 }
