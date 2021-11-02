@@ -118,7 +118,7 @@ class FirebaseService {
   }
 
   Future<void> addUserDocument(context, String fName, String lName, String age,
-      String bio, String fullName) async {
+      String bio, String fullName, List ratings) async {
     await _userCollection
         .doc(_auth.currentUser?.uid)
         .set({
@@ -128,7 +128,8 @@ class FirebaseService {
           'bio': bio,
           'creationDate': DateTime.now(),
           'id': _auth.currentUser?.uid,
-          'fullName': fullName
+          'fullName': fullName,
+          'ratings': []
         })
         .then((value) => snackbar(context, "User Added", 5))
         .catchError((error) => throw (error));
@@ -174,10 +175,10 @@ class FirebaseService {
     String pid,
     String content,
     String timestamp,
-  ) {
+  ) async {
     final DocumentReference convoDoc =
         _firestore.collection('messages').doc(convoID);
-    convoDoc.set({
+    await convoDoc.set({
       'lastMessage': {
         'idFrom': id,
         'idTo': pid,
@@ -186,26 +187,30 @@ class FirebaseService {
         'read': false
       },
       'users': [id, pid]
-    }).then((value) {
-      final DocumentReference messageDoc = _firestore
-          .collection('messages')
-          .doc(convoID)
-          .collection(convoID)
-          .doc(timestamp);
+    }).then(
+      (value) async {
+        final DocumentReference messageDoc = _firestore
+            .collection('messages')
+            .doc(convoID)
+            .collection(convoID)
+            .doc(timestamp);
 
-      _firestore.runTransaction((transaction) async {
-        await transaction.set(
-          messageDoc,
-          {
-            'idFrom': id,
-            'idTo': pid,
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            'content': content,
-            'read': false
+        await _firestore.runTransaction(
+          (transaction) async {
+            await transaction.set(
+              messageDoc,
+              {
+                'idFrom': id,
+                'idTo': pid,
+                'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+                'content': content,
+                'read': false
+              },
+            );
           },
         );
-      });
-    });
+      },
+    );
   }
 
   void updateLastMessageRead(String uid, String pid, String convoId,
@@ -247,5 +252,16 @@ class FirebaseService {
               Users.fromMap(snap.data() as Map<String, dynamic>)));
     }
     return StreamZip<Users>(streams).asBroadcastStream();
+  }
+
+  enterRating(String rating, String userId) async {
+    DocumentSnapshot<Map<String, dynamic>> doc =
+        await _firestore.collection('users').doc(userId).get();
+    List<dynamic> ratingList = doc['ratings'];
+    ratingList.add(rating);
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .update({'ratings': ratingList});
   }
 }

@@ -1,11 +1,13 @@
 import 'package:bubble/bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:homework_3/components/snackbar.dart';
 import 'package:homework_3/models/user.dart';
 import 'package:homework_3/services/firebase_service.dart';
 
 class NewConversationScreen extends StatelessWidget {
-  const NewConversationScreen(
+  NewConversationScreen(
       {Key? key,
       required this.uid,
       required this.contact,
@@ -16,12 +18,75 @@ class NewConversationScreen extends StatelessWidget {
   final Users? contact;
   final String convoID;
 
+  final TextEditingController _textFieldController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text(contact!.fullName),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(contact!.fullName),
+            IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title:
+                          const Text('Enter a valid conversation rating 1-5'),
+                      content: TextField(
+                        controller: _textFieldController,
+                        decoration:
+                            const InputDecoration(hintText: "Enter Rating"),
+                      ),
+                      actions: [
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            primary: Colors.white,
+                            backgroundColor: Colors.red,
+                          ),
+                          child: const Text('CANCEL'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            primary: Colors.white,
+                            backgroundColor: Colors.green,
+                          ),
+                          child: const Text('SUBMIT'),
+                          onPressed: () async {
+                            if (int.tryParse(_textFieldController.text) !=
+                                    null &&
+                                int.tryParse(_textFieldController.text)! >= 1 &&
+                                int.tryParse(_textFieldController.text)! <= 5) {
+                              try {
+                                await FirebaseService().enterRating(
+                                    _textFieldController.text, contact!.id);
+                                snackbar(
+                                    context, 'Rating successfully given.', 5);
+                                Navigator.of(context).pop();
+                              } catch (error) {
+                                throw ErrorDescription(error.toString());
+                              }
+                            } else {
+                              snackbar(context,
+                                  'Invalid number. Enter a rating 1-5', 5);
+                            }
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              icon: const Icon(FontAwesomeIcons.star),
+            ),
+          ],
+        ),
       ),
       body: ChatScreen(uid: uid, convoID: convoID, contact: contact),
     );

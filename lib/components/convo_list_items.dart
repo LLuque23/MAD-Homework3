@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:homework_3/constants/constants.dart';
 import 'package:homework_3/models/user.dart';
 import 'package:homework_3/screens/new_conversation_screen.dart';
-import 'package:homework_3/services/firebase_service.dart';
 import 'package:intl/intl.dart';
 
 class ConvoListItem extends StatelessWidget {
@@ -56,12 +55,10 @@ class ConvoListItem extends StatelessWidget {
             builder: (BuildContext context) => NewConversationScreen(
               uid: user.uid,
               contact: peer,
-              convoID: getGroupChatId(),
+              convoID: groupId,
             ),
           ),
         );
-        FirebaseService().updateLastMessageRead(
-            user.uid, peer!.id, getGroupChatId(), lastMessage);
       },
       child: Container(
         decoration: BoxDecoration(border: Border.all(width: 1)),

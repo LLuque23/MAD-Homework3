@@ -5,6 +5,7 @@ import 'package:homework_3/screens/home_screen.dart';
 import 'package:homework_3/screens/landing_screen.dart';
 import 'package:homework_3/screens/login_screen.dart';
 import 'package:homework_3/screens/new_message.dart';
+import 'package:homework_3/screens/profile_screen.dart';
 import 'package:homework_3/screens/register_screen.dart';
 
 void main() async {
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         '/homeBuilder': (BuildContext context) => HomeBuilder(),
         '/messageProvider': (BuildContext context) =>
             const NewMessageProvider(),
+        '/profileScreen': (BuildContext context) => const ProfileScreen()
       },
     );
   }

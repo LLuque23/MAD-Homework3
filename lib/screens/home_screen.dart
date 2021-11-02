@@ -76,6 +76,13 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed('/profileScreen');
+              },
+              icon: const Icon(FontAwesomeIcons.user),
+              tooltip: 'PROFILE',
+            ),
+            IconButton(
               onPressed: () =>
                   Navigator.of(context).pushNamed('/messageProvider'),
               icon: const Icon(FontAwesomeIcons.plus, size: 30),
@@ -99,7 +106,6 @@ class HomeScreen extends StatelessWidget {
       final Map<String, Users> userMap = getUserMap(_users);
       for (Convo c in _convos) {
         if (c.userIds[0] == user.uid) {
-          print("USER IDS: " + c.userIds.toString());
           list.add(ConvoListItem(
               user: user,
               peer: userMap[c.userIds[1]],
