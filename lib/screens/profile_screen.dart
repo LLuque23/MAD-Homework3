@@ -33,14 +33,42 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("BIO: " + snapshot.data['bio']),
-                    const SizedBox(
-                      height: 10,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "BIO",
+                          style: TextStyle(
+                              fontSize: 20,
+                              decoration: TextDecoration.underline),
+                        ),
+                        Text(
+                          ': ' + snapshot.data['bio'],
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ],
                     ),
-                    Text("CONVERSATION RATING: " +
-                        (total == 0
-                            ? 'No ratings yet'
-                            : (total / ratings.length).toString()))
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'CONVERSATION RATING',
+                          style: TextStyle(
+                              fontSize: 20,
+                              decoration: TextDecoration.underline),
+                        ),
+                        Text(
+                          ': ' +
+                              (total == 0
+                                  ? 'No ratings yet'
+                                  : (total / ratings.length).toString()),
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
