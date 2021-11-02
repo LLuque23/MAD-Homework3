@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                         validator: (value) {
                           if (!EmailValidator.validate(value!)) {
-                            return "Please enter Password";
+                            return "Please enter valid email";
                           }
                         },
                         textAlign: TextAlign.center,
@@ -180,9 +180,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               setState(() {
                                 isloading = true;
                               });
+                              UserCredential? user;
                               try {
-                                UserCredential? user = await _firebaseService
+                                user = await _firebaseService
                                     .createEmailAndPassword(email, password);
+                              } catch (e) {
+                                snackbar(context, e.toString(), 3);
+                              } finally {
+                                setState(() {
+                                  isloading = false;
+                                });
                                 if (user != null) {
                                   await _firebaseService.addUserDocument(
                                       context,
@@ -190,11 +197,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       lName,
                                       age,
                                       bio,
-                                      fName + " " + lName);
+                                      fName + " " + lName, []);
+                                  Navigator.of(context).pop();
                                 }
-                                Navigator.of(context).pop();
-                              } catch (e) {
-                                snackbar(context, e.toString(), 3);
                               }
                             }
                           },

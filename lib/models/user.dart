@@ -8,7 +8,8 @@ class Users {
       required this.creationDate,
       required this.bio,
       required this.id,
-      required this.fullName});
+      required this.fullName,
+      required this.ratings});
 
   final String fName;
   final String lName;
@@ -17,6 +18,7 @@ class Users {
   final Timestamp creationDate;
   final String id;
   final String fullName;
+  final List ratings;
 
   factory Users.fromMap(Map<String, dynamic> data) {
     return Users(
@@ -26,6 +28,7 @@ class Users {
         bio: data['bio'],
         creationDate: data['creationDate'],
         id: data['id'],
-        fullName: data['fullName']);
+        fullName: data['fullName'],
+        ratings: data['ratings']);
   }
 }
